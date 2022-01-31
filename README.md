@@ -120,7 +120,8 @@ The varible we create will be used in the manifest file (deployment.tf) under th
       }
 ```
 
-**References**
+#### References 
 [Terraform-offical-website](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/) 
+
 [Kubernetes offical website](https://kubernetes.io/docs/concepts/)
 
