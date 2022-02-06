@@ -2,34 +2,34 @@
 ### Deployment manifests for 3 applications (frontend, backend, database) ###
 ### feel free to change anything and to implement any function or method  ###
 #############################################################################
-
-resource "kubernetes_deployment" "app1" {
+resource "kubernetes_deployment" "instance" {
+  for_each = {for inst in var.app_info:  inst.app_name => inst}
   metadata {
-    name      = var.app1_name
-    namespace = var.app1_name
+    name      = "${each.value.app_name}"
+    namespace = "${each.value.app_name}"
     labels = {
-      name = var.app1_labels.name
-      tier = var.app1_labels.tier
+      name = "${each.value.name_label}"
+      tier = "${each.value.tier_label}"
     }
   }
   spec {
     selector {
       match_labels = {
-        name = var.app1_labels.name
-        tier = var.app1_labels.tier
+        name = "${each.value.name_label}"
+        tier = "${each.value.tier_label}"
       }
     }
     template {
       metadata {
-        name = var.app1_name
+        name = "${each.value.app_name}"
         labels = {
-          name = var.app1_labels.name
-          tier = var.app1_labels.tier
+          name = "${each.value.name_label}"
+          tier = "${each.value.tier_label}"
         }
       }
       spec {
         container {
-          name  = var.app1_name
+          name  = "${each.value.app_name}"
           image = "nginx"
         }
       }
@@ -37,70 +37,37 @@ resource "kubernetes_deployment" "app1" {
   }
 }
 
-resource "kubernetes_deployment" "app2" {
+resource "kubernetes_deployment" "database" {
   metadata {
-    name      = var.app2_name
-    namespace = var.app2_name
+    name      = var.database.db.app_name
+    namespace = var.database.db.app_name
     labels = {
-      name = var.app2_labels.name
-      tier = var.app2_labels.tier
+      name = var.database.db.name_label
+      tier = var.database.db.tier_label
     }
   }
   spec {
     selector {
       match_labels = {
-        name = var.app2_labels.name
-        tier = var.app2_labels.tier
+        name = var.database.db.name_label
+        tier = var.database.db.tier_label
       }
     }
     template {
       metadata {
-        name = var.app2_name
+        name = var.database.db.app_name
         labels = {
-          name = var.app2_labels.name
-          tier = var.app2_labels.tier
+          name = var.database.db.name_label
+          tier = var.database.db.tier_label
         }
       }
       spec {
         container {
-          name  = var.app2_name
-          image = "nginx"
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_deployment" "app3" {
-  metadata {
-    name      = var.app3_name
-    namespace = var.app3_name
-    labels = {
-      name = var.app3_labels.name
-      tier = var.app3_labels.tier
-    }
-  }
-  spec {
-    selector {
-      match_labels = {
-        name = var.app3_labels.name
-        tier = var.app3_labels.tier
-      }
-    }
-    template {
-      metadata {
-        name = var.app3_name
-        labels = {
-          name = var.app3_labels.name
-          tier = var.app3_labels.tier
-        }
-      }
-      spec {
-        container {
-          name  = var.app3_name
+          name  = var.database.db.app_name
           image = "mongo"
         }
       }
     }
   }
 }
+
